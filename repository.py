@@ -62,7 +62,10 @@ def get_count_all_planes():
 
 # data pull for plotting interference % (low nac_p) over time using functions above
 
-def p_of_interference():
+def p_of_interference(min_time, max_time):
+    mi = min_time.strftime('%Y-%m-%d %H:%M:%S')
+    mx = max_time.strftime('%Y-%m-%d %H:%M:%S')
+
     count_total_flights = get_count_all_planes()
     count_affected_flights = get_count_of_nac_p_under_6()
 
@@ -71,14 +74,17 @@ def p_of_interference():
 
     merged_df = pd.merge(total_df, affected_df, on='timestamp', how='outer')
     merged_df['p_interference'] = (merged_df['count_affected'] / merged_df['total_count']) * 100
+    df = merged_df[(merged_df['timestamp'] >= mi) & (merged_df['timestamp'] <= mx)]
 
-    return merged_df
+    return df
 
 
 # Function to fetch plane location data
 def get_plane_location(min_time, max_time, show_affected):
-    min_time = min_time.strftime('%Y-%m-%d %H:%M:%S')
-    max_time = max_time.strftime('%Y-%m-%d %H:%M:%S')
+    print(min_time, max_time)
+    mi = min_time.strftime('%Y-%m-%d %H:%M:%S')
+    mx = max_time.strftime('%Y-%m-%d %H:%M:%S')
+    print(min_time, max_time)
 
     if show_affected:
         query = f'''
@@ -86,7 +92,7 @@ def get_plane_location(min_time, max_time, show_affected):
             FROM geolocation g
             INNER JOIN flight f
             USING(id_flight)
-            WHERE g.timestamp BETWEEN '{min_time}' AND '{max_time}' AND g.nac_p <= 6
+            WHERE g.timestamp BETWEEN '{mi}' AND '{mx}' AND g.nac_p <= 6
         '''
     else:
         query = f'''
@@ -94,7 +100,7 @@ def get_plane_location(min_time, max_time, show_affected):
             FROM geolocation g
             INNER JOIN flight f
             USING(id_flight)
-            WHERE g.timestamp BETWEEN '{min_time}' AND '{max_time}'
+            WHERE g.timestamp BETWEEN '{mi}' AND '{mx}'
         '''
 
     # Execute query and fetch data
