@@ -4,6 +4,8 @@ import datetime
 import warnings
 from datetime import datetime
 import os
+import st
+
 warnings.filterwarnings('ignore')
 sql_password = os.environ.get('SQL_PASSWORD')
 
@@ -21,14 +23,19 @@ def api_call(lat=55.620824, lon=17.771781, radius=200):
 
     base_url = 'https://api.airplanes.live/v2/point/'
 
-    url = f'{base_url}{lat}/{lon}/{radius}'
+    # if st.collect_israel:
+    #     url = f'{base_url}{33.951715}/{34.684787}/{radius}'
+    # else:
+    #     url = f'{base_url}{lat}/{lon}/{radius}'
 
+    url = f'{base_url}{33.951715}/{34.684787}/{radius}'
     response = requests.get(url)
 
     if response.status_code == 200:
         data = response.json()
     else:
         print('error', response.status_code)
+
     return data
 
 
@@ -304,17 +311,19 @@ def collect_data():
 
 
 # EXECUTION
-# try:
-#     from apscheduler.schedulers.background import BackgroundScheduler
-#
-#     # Create a scheduler
-#     scheduler = BackgroundScheduler()
-#
-#     # Schedule the data collection function to run every hour
-#     scheduler.add_job(collect_data, 'interval', minutes=1)
-#
-#     # Start the scheduler
-#     scheduler.start()
-#     # scheduler.shutdown()
-# except:
-#     print('Did not work')
+try:
+    from apscheduler.schedulers.background import BackgroundScheduler
+
+    # Create a scheduler
+    scheduler = BackgroundScheduler()
+
+    # Schedule the data collection function to run every hour
+    scheduler.add_job(collect_data, 'interval', minutes=1)
+
+    # Start the scheduler
+    scheduler.start()
+    # scheduler.shutdown()
+except:
+    print('Did not work')
+
+# scheduler.shutdown()

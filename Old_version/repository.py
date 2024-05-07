@@ -4,6 +4,7 @@ import pandas as pd
 import os
 
 sql_password = os.environ.get('SQL_PASSWORD')
+time_format = '%Y-%m-%d %H:%M:%S'
 
 bd = "gps_jamming"
 connection_string = 'mysql+pymysql://root:' + sql_password + '@localhost:3306/' + bd
@@ -20,7 +21,7 @@ def get_last_timestamp():
         ).fetchone()
     last_timestamp_str = last_fetch[0]
     if last_timestamp_str:
-        last_timestamp_datetime = datetime.strptime(last_timestamp_str, '%Y-%m-%d %H:%M:%S')
+        last_timestamp_datetime = datetime.strptime(last_timestamp_str, time_format)
         return last_timestamp_datetime
     else:
         return None
@@ -63,8 +64,8 @@ def get_count_all_planes():
 # data pull for plotting interference % (low nac_p) over time using functions above
 
 def p_of_interference(min_time, max_time):
-    mi = min_time.strftime('%Y-%m-%d %H:%M:%S')
-    mx = max_time.strftime('%Y-%m-%d %H:%M:%S')
+    mi = min_time.strftime(time_format)
+    mx = max_time.strftime(time_format)
 
     count_total_flights = get_count_all_planes()
     count_affected_flights = get_count_of_nac_p_under_6()
@@ -82,8 +83,8 @@ def p_of_interference(min_time, max_time):
 # Function to fetch plane location data
 def get_plane_location(min_time, max_time, show_affected):
     print(min_time, max_time)
-    mi = min_time.strftime('%Y-%m-%d %H:%M:%S')
-    mx = max_time.strftime('%Y-%m-%d %H:%M:%S')
+    mi = min_time.strftime(time_format)
+    mx = max_time.strftime(time_format)
     print(min_time, max_time)
 
     if show_affected:
@@ -120,10 +121,10 @@ def get_plane_location(min_time, max_time, show_affected):
 def get_min_max_timestamp():
     with engine.connect() as connection:
         min_fetch = connection.execute("SELECT MIN(timestamp) FROM flight").fetchone()
-        min_timestamp = datetime.strptime(min_fetch[0], '%Y-%m-%d %H:%M:%S') if min_fetch else None
+        min_timestamp = datetime.strptime(min_fetch[0], time_format) if min_fetch else None
 
         max_fetch = connection.execute("SELECT MAX(timestamp) FROM flight").fetchone()
-        max_timestamp = datetime.strptime(max_fetch[0], '%Y-%m-%d %H:%M:%S') if max_fetch else None
+        max_timestamp = datetime.strptime(max_fetch[0], time_format) if max_fetch else None
 
     return min_timestamp, max_timestamp
 
