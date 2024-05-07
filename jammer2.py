@@ -5,6 +5,10 @@ from sqlalchemy.orm import relationship
 import datetime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
+from flask import Flask
+from apscheduler.schedulers.background import BackgroundScheduler
+
+app = Flask(__name__)
 
 password = 'Nimo_db_password'
 bd = "gps_jamming"
@@ -13,6 +17,7 @@ engine = create_engine(connection_string)
 
 Session = sessionmaker(bind=engine)
 Base = declarative_base()
+scheduler = BackgroundScheduler()
 
 
 def api_call(lat=59.530270, lon=29.458939, radius=750):
@@ -169,5 +174,9 @@ class Geolocation(Base):
     gpsOkBefore = Column(Float)
     timestamp = Column(DateTime)
 
-collect_data()
 
+scheduler.add_job(collect_data, 'interval', seconds=30)
+scheduler.start()
+
+if __name__ == '__main__':
+    app.run()
