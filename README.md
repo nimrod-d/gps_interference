@@ -1,6 +1,6 @@
 # GPS INTERFERNCE
 
-In this proejct I am using AIRPLANES.LIVE ADS-B REST API to create database from which it is then possible to view airplanes which are experiencing GPS interference
+In this proejct I am using AIRPLANES.LIVE ADS-B REST API to create database from which it is then possible to view airplanes which are experiencing GPS interference & the option to traingualte the locartion of the GPS jammer itself 
 
 ![Airplanes who register low GPS accuracy](images/linkdin_p.png)
 
