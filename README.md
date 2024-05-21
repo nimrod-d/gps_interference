@@ -4,6 +4,9 @@ In this proejct I am using AIRPLANES.LIVE ADS-B REST API to create database from
 
 ![Airplanes who register low GPS accuracy](images/linkdin_p.png)
 
+![Using radio horizon to determine possible location of GPS jammer](images/radio_horizon_p.png)
+
+
 
 # Flight Data Collector
 
